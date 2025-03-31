@@ -12,7 +12,9 @@ In the notebook, we demonstrate, how to correct pressure-area isotherm (1) by us
 
 # Requirements
 
-1. Folder `./Databank-monolayers` should be initialized by *NMRlipids/Databank@monolayer-dev* from one of the sources
+1. Folder `./Databank-monolayers` should be initialized from *NMRlipids/Databank@adding-monolayers*
+    - https://github.com/NMRLipids/Databank/tree/adding-monolayers  
+or by *Databank@monolayer-dev* from one of the sources
     - https://github.com/fsuarezleston/NMRLipids_Databank/tree/monolayer-dev
     - https://github.com/comcon1/Databank/tree/monolayer-dev
 2. Please make your python environment to satisfy NMRLipids Databank requirements. We don't have any additional requirements inside this notebook.
