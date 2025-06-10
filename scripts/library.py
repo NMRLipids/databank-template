@@ -1,8 +1,5 @@
 """
 Dihedral angle analyser working on NMRlipids Databank.
-
-TODO: add usage example
-TODO: test it with the newest Databank version
 """
 
 import copy
