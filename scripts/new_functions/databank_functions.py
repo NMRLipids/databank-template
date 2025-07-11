@@ -1,7 +1,7 @@
 import json
 import logging
-from pathlib import Path
 from typing import Any, Literal
+import os
 
 import DatabankLib as dlb
 
@@ -55,16 +55,15 @@ def get_form_factor_and_total_density_pair(
 
     :return: Form factor and total density of the simulation.
     """
-    simu_path = Path(dlb.NMLDB_SIMU_PATH)
-    system_endpath = simu_path / system["path"]
-    form_factor_path = system_endpath / "FormFactor.json"
-    total_density_path = system_endpath / "TotalDensity.json"
+    system_endpath = os.path.join(dlb.NMLDB_SIMU_PATH, system["path"])
+    form_factor_path = os.path.join(system_endpath, "FormFactor.json")
+    total_density_path = os.path.join(system_endpath, "TotalDensity.json")
 
     # Load form factor and total density
     try:
-        with form_factor_path.open("r") as json_file:
+        with open(form_factor_path, "r") as json_file:
             form_factor_simulation = json.load(json_file)
-        with total_density_path.open("r") as json_file:
+        with open(total_density_path, "r") as json_file:
             total_density_simulation = json.load(json_file)
     except (FileNotFoundError, json.JSONDecodeError) as e:
         handle_error(e, error_strategy, "Error loading simulation data")
