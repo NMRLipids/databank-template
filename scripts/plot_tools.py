@@ -8,7 +8,13 @@ from fairmd.lipids.analib.formfactor import calc_ff_scaling_distance
 from fairmd.lipids.auxiliary.opconvertor import build_nice_OPdict
 from fairmd.lipids.experiment import ExperimentCollection
 from fairmd.lipids.molecules import Lipid
-from fairmd.lipids.ipylib import plotFormFactor, plotOrderParameters
+
+try:  # fairmd-lipids > 1.6
+    from fairmd.lipids.ipylib import plot_simulation_FF, plot_simulation_OP
+except ImportError:  # fairmd-lipids <= 1.6
+    from fairmd.lipids.ipylib import plotFormFactor, plotOrderParameters
+
+    plot_simulation_FF = plot_simulation_OP = None
 
 
 def _as_id_list(value) -> list[str]:
@@ -115,6 +121,19 @@ def _load_first_ff_experiment_curve(
     return None, None
 
 
+def _plot_simulation_ipylib(system, lipid: str) -> None:
+    """Plot FF and OP through the fairmd.lipids.ipylib plotting API (> 1.6)."""
+    try:
+        plot_simulation_FF(system)  # also prints DOI and FF quality
+    except Exception as exc:
+        print(f"Form factor plotting failed: {exc}")
+    try:
+        plot_simulation_OP(system, lipid)
+    except Exception as exc:
+        print(f"Order parameter plotting failed for {lipid}: {exc}")
+    plt.show()
+
+
 def plotSimulation(system, lipid: str):  # noqa: N802
     """
     Robust drop-in replacement for fairmd.lipids.ipylib.plotSimulation.
@@ -126,7 +145,14 @@ def plotSimulation(system, lipid: str):  # noqa: N802
 
     This version tolerates modern EXPERIMENT schemas where ORDERPARAMETER entries
     are lists of experiment IDs instead of dictionaries.
+
+    With fairmd-lipids > 1.6 it delegates to ``plot_simulation_FF`` and
+    ``plot_simulation_OP``; the code below is the fallback for older releases.
     """
+    if plot_simulation_OP is not None:
+        _plot_simulation_ipylib(system, lipid)
+        return
+
     print("DOI:", system.get("DOI", "N/A"))
 
     experiments = system.get("EXPERIMENT", {})
